@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Management System - Login</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/forms.css">
+    <link rel="stylesheet" href="css/buttons.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .login-container {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .login-header {
+            margin-bottom: 2rem;
+        }
+
+        .login-header h1 {
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+            font-size: 2rem;
+            font-weight: 600;
+        }
+
+        .login-header p {
+            color: #6c757d;
+            margin: 0;
+        }
+
+        .school-icon {
+            font-size: 4rem;
+            color: #3498db;
+            margin-bottom: 1rem;
+        }
+
+        .login-form {
+            text-align: left;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .form-group i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+            z-index: 1;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus {
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+            outline: none;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(52, 152, 219, 0.3);
+        }
+
+        .login-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            margin: 1rem 0;
+        }
+
+        .remember-me input {
+            margin-right: 0.5rem;
+        }
+
+        .forgot-password {
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+
+        .forgot-password a {
+            color: #3498db;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            background: #fee;
+            color: #c33;
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            text-align: center;
+            display: none;
+        }
+
+        .loading-spinner {
+            display: none;
+            margin-right: 0.5rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-spinner.active {
+            display: inline-block;
+            animation: spin 1s linear infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <i class="fas fa-graduation-cap school-icon"></i>
+            <h1>School Management</h1>
+            <p>Sign in to access your dashboard</p>
+        </div>
+
+        <div class="error-message" id="error-message">
+            Invalid username or password. Please try again.
+        </div>
+
+        <form class="login-form" id="login-form">
+            <div class="form-group">
+                <i class="fas fa-user"></i>
+                <input type="text" id="username" name="username" placeholder="Username" required>
+            </div>
+
+            <div class="form-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="password" name="password" placeholder="Password" required>
+            </div>
+
+            <div class="remember-me">
+                <input type="checkbox" id="remember" name="remember">
+                <label for="remember">Remember me</label>
+            </div>
+
+            <button type="submit" class="login-btn" id="login-btn">
+                <i class="fas fa-spinner loading-spinner" id="loading-spinner"></i>
+                Sign In
+            </button>
+        </form>
+
+        <div class="forgot-password">
+            <a href="#" onclick="alert('Contact your administrator for password reset.')">Forgot your password?</a>
+        </div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/api-service.js"></script>
+    <script>
+        class LoginManager {
+            constructor() {
+                this.initializeEventListeners();
+                this.checkExistingSession();
+            }
+
+            initializeEventListeners() {
+                const loginForm = document.getElementById('login-form');
+                loginForm.addEventListener('submit', (e) => this.handleLogin(e));
+            }
+
+            checkExistingSession() {
+                // Check if user is already logged in
+                const isLoggedIn = localStorage.getItem('isLoggedIn');
+                const rememberMe = localStorage.getItem('rememberMe');
+                
+                if (isLoggedIn === 'true' && rememberMe === 'true') {
+                    this.redirectToDashboard();
+                }
+            }
+
+            async handleLogin(e) {
+                e.preventDefault();
+                
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+                const remember = document.getElementById('remember').checked;
+                
+                console.log('🔐 Starting login process for username:', username);
+                
+                this.showLoading(true);
+                this.hideError();
+
+                try {
+                    // Check if API service is available
+                    if (typeof apiService === 'undefined') {
+                        console.error('❌ API service not available');
+                        throw new Error('API service not available');
+                    }
+                    
+                    console.log('🔧 API service available, calling authenticateUser...');
+                    
+                    // Use API service to authenticate against Back4App User table
+                    const result = await apiService.authenticateUser(username, password);
+                    console.log('🔍 Authentication result:', result);
+                    
+                    if (result.success) {
+                        console.log('✅ Login successful for user:', result.user);
+                        
+                        // Store login state
+                        localStorage.setItem('isLoggedIn', 'true');
+                        localStorage.setItem('username', result.user.username);
+                        localStorage.setItem('userId', result.user.objectId);
+                        localStorage.setItem('userRole', 'user');
+                        localStorage.setItem('rememberMe', remember);
+                        localStorage.setItem('loginTime', new Date().toISOString());
+                        
+                        // Store user session
+                        sessionStorage.setItem('userSession', JSON.stringify({
+                            isAuthenticated: true,
+                            user: result.user,
+                            loginTime: new Date().toISOString()
+                        }));
+                        
+                        // Redirect to dashboard
+                        this.redirectToDashboard();
+                    } else {
+                        this.showError(result.error || 'Invalid username or password. Please try again.');
+                        this.showLoading(false);
+                    }
+                    
+                } catch (error) {
+                    console.error('Login error:', error);
+                    this.showError('Login failed. Please check your connection and try again.');
+                    this.showLoading(false);
+                }
+            }
+
+            showLoading(show) {
+                const spinner = document.getElementById('loading-spinner');
+                const button = document.getElementById('login-btn');
+                
+                if (show) {
+                    spinner.classList.add('active');
+                    button.disabled = true;
+                } else {
+                    spinner.classList.remove('active');
+                    button.disabled = false;
+                }
+            }
+
+            showError(message) {
+                const errorDiv = document.getElementById('error-message');
+                errorDiv.textContent = message;
+                errorDiv.style.display = 'block';
+            }
+
+            hideError() {
+                const errorDiv = document.getElementById('error-message');
+                errorDiv.style.display = 'none';
+            }
+
+            redirectToDashboard() {
+                window.location.href = 'dashboard.html';
+            }
+        }
+
+        // Global helper function for debugging
+        window.testAPI = {
+            async getUsers() {
+                console.log('🧪 Testing API getUsers method...');
+                try {
+                    const users = await apiService.getUsers();
+                    console.log('✅ Test getUsers result:', users);
+                    return users;
+                } catch (error) {
+                    console.error('❌ Test getUsers failed:', error);
+                    return null;
+                }
+            },
+            async testAuth(username, password) {
+                console.log('🧪 Testing authentication...');
+                try {
+                    const result = await apiService.authenticateUser(username, password);
+                    console.log('✅ Test auth result:', result);
+                    return result;
+                } catch (error) {
+                    console.error('❌ Test auth failed:', error);
+                    return null;
+                }
+            }
+        };
+
+        // Initialize login manager when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            new LoginManager();
+        });
+    </script>
+</body>
+</html>

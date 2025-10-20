@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Title - School Management System</title>
+    
+    <!-- Required CSS files for sidebar and layout -->
+    <link rel="stylesheet" href="css/sidebar.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Add any page-specific CSS files here -->
+    <!-- <link rel="stylesheet" href="css/your-page.css"> -->
+</head>
+<body>
+    <!-- Sidebar will be automatically loaded here by sidebar.js -->
+    
+    <div class="main-content">
+        <div class="content-container">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1 class="page-title">
+                    <i class="fas fa-your-icon"></i>
+                    Your Page Title
+                </h1>
+                <p class="page-subtitle">Description of what this page does.</p>
+            </div>
+
+            <!-- Page Content -->
+            <div class="content-card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <i class="fas fa-list"></i>
+                        Section Title
+                    </h2>
+                    <div class="card-actions">
+                        <button class="btn btn-primary">
+                            <i class="fas fa-plus"></i>
+                            Add New
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Your content here -->
+                <p>Your page content goes here...</p>
+            </div>
+
+            <!-- Additional content cards -->
+            <div class="content-card">
+                <h3>Another Section</h3>
+                <p>More content...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Required JavaScript files -->
+    <script src="js/config.js"></script>
+    <script src="js/api-service.js"></script>
+    <script src="js/sidebar.js"></script>
+    <script src="js/student-management.js"></script>
+    
+    <!-- Page-specific JavaScript -->
+    <script>
+        // Authentication check function
+        function checkAuthentication() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            if (isLoggedIn !== 'true') {
+                window.location.href = 'login.html';
+                return false;
+            }
+            return true;
+        }
+
+        // Your page-specific class
+        class YourPageManager {
+            constructor(apiService) {
+                this.apiService = apiService;
+                this.init();
+            }
+
+            async init() {
+                try {
+                    // Initialize your page functionality here
+                    await this.loadData();
+                    this.setupEventListeners();
+                    console.log('✅ Page initialized successfully');
+                } catch (error) {
+                    console.error('❌ Page initialization failed:', error);
+                }
+            }
+
+            async loadData() {
+                // Load data from API
+                try {
+                    // Example: const data = await this.apiService.getYourData();
+                    console.log('Data loaded');
+                } catch (error) {
+                    console.error('Failed to load data:', error);
+                }
+            }
+
+            setupEventListeners() {
+                // Set up your event listeners here
+                console.log('Event listeners set up');
+            }
+        }
+
+        // Initialize when DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check authentication first
+            if (!checkAuthentication()) return;
+            
+            // Initialize your page manager
+            if (typeof apiService !== 'undefined') {
+                window.yourPageManager = new YourPageManager(apiService);
+            } else {
+                console.error('API service not available');
+            }
+        });
+    </script>
+
+    <!-- Optional: Page-specific styles -->
+    <style>
+        /* Add any page-specific CSS here */
+        /* Or preferably create a separate CSS file */
+    </style>
+</body>
+</html>

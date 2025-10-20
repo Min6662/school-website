@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - School Management System</title>
+    <link rel="stylesheet" href="css/main.css?v=2">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h3><i class="fas fa-graduation-cap"></i> School Portal</h3>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="dashboard.html" class="nav-item">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="students.html" class="nav-item">
+                <i class="fas fa-user-graduate"></i>
+                <span>Students</span>
+            </a>
+            <a href="teachers.html" class="nav-item">
+                <i class="fas fa-chalkboard-teacher"></i>
+                <span>Teachers</span>
+            </a>
+            <a href="classes.html" class="nav-item">
+                <i class="fas fa-book-open"></i>
+                <span>Classes</span>
+            </a>
+            <a href="results.html" class="nav-item">
+                <i class="fas fa-chart-bar"></i>
+                <span>Results</span>
+            </a>
+            <a href="settings.html" class="nav-item">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </a>
+        </nav>
+    </div>
+
+    <div class="main-content">
+        <script>
+                            // Dynamic sidebar highlighting (debug version)
+                            document.addEventListener('DOMContentLoaded', function() {
+                                var navItems = document.querySelectorAll('.sidebar-nav .nav-item');
+                                var current = window.location.pathname.split('/').pop().split('?')[0];
+                                console.log('Sidebar highlight debug: current page is', current);
+                                navItems.forEach(function(item) {
+                                    var href = item.getAttribute('href');
+                                    console.log('Checking nav-item href:', href);
+                                    if (href === current) {
+                                        console.log('Match! Adding active to', href);
+                                        item.classList.add('active');
+                                    } else {
+                                        item.classList.remove('active');
+                                    }
+                                });
+                            });
+        </script>
+        <header class="main-header">
+            <h1>Settings</h1>
+            <div class="header-actions">
+                <button class="btn btn-outline" onclick="location.reload()">
+                    <i class="fas fa-sync-alt"></i> Refresh
+                </button>
+            </div>
+        </header>
+
+        <div class="content-wrapper">
+            <!-- User Profile Section -->
+            <div class="settings-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-user"></i> User Profile</h2>
+                    <p>Manage your account information</p>
+                </div>
+                <div class="section-content">
+                    <div class="profile-info">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Username</label>
+                                <input type="text" id="profile-username" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label>Login Time</label>
+                                <input type="text" id="login-time" readonly>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Session Status</label>
+                                <span class="status-badge active">Active</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Security Section -->
+            <div class="settings-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-shield-alt"></i> Security</h2>
+                    <p>Manage your account security</p>
+                </div>
+                <div class="section-content">
+                    <div class="security-actions">
+                        <button class="btn btn-primary" onclick="changePassword()">
+                            <i class="fas fa-key"></i> Change Password
+                        </button>
+                        <button class="btn btn-warning" onclick="clearCache()">
+                            <i class="fas fa-broom"></i> Clear Cache
+                        </button>
+                        <button class="btn btn-danger" onclick="logout()">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Preferences -->
+            <div class="settings-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-cogs"></i> System Preferences</h2>
+                    <p>Customize your system experience</p>
+                </div>
+                <div class="section-content">
+                    <div class="preferences">
+                        <div class="preference-item">
+                            <label>
+                                <input type="checkbox" id="notifications" checked>
+                                <span>Enable notifications</span>
+                            </label>
+                        </div>
+                        <div class="preference-item">
+                            <label>
+                                <input type="checkbox" id="auto-save" checked>
+                                <span>Auto-save changes</span>
+                            </label>
+                        </div>
+                        <div class="preference-item">
+                            <label>
+                                <input type="checkbox" id="dark-mode">
+                                <span>Dark mode</span>
+                            </label>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="savePreferences()">
+                        <i class="fas fa-save"></i> Save Preferences
+                    </button>
+                </div>
+            </div>
+
+            <!-- Application Info -->
+            <div class="settings-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-info-circle"></i> Application Information</h2>
+                    <p>System details and version information</p>
+                </div>
+                <div class="section-content">
+                    <div class="app-info">
+                        <div class="info-item">
+                            <strong>Version:</strong> <span>1.0.0</span>
+                        </div>
+                        <div class="info-item">
+                            <strong>Last Updated:</strong> <span>October 2025</span>
+                        </div>
+                        <div class="info-item">
+                            <strong>Database:</strong> <span>Back4App</span>
+                        </div>
+                        <div class="info-item">
+                            <strong>Build:</strong> <span>Production</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Logout Confirmation Modal -->
+    <div id="logout-modal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <h2><i class="fas fa-sign-out-alt"></i> Confirm Logout</h2>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to logout? Any unsaved changes will be lost.</p>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeLogoutModal()">Cancel</button>
+                <button class="btn btn-danger" onclick="confirmLogout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Container -->
+    <div id="notification-container"></div>
+
+    <script src="js/config.js"></script>
+    <script src="js/sidebar.js"></script>
+    <script src="js/navigation.js"></script>
+    <script>
+        class SettingsManager {
+            constructor() {
+                this.checkAuthentication();
+                this.loadUserInfo();
+                this.loadPreferences();
+            }
+
+            checkAuthentication() {
+                const isLoggedIn = localStorage.getItem('isLoggedIn');
+                if (isLoggedIn !== 'true') {
+                    window.location.href = 'login.html';
+                    return;
+                }
+            }
+
+            loadUserInfo() {
+                const username = localStorage.getItem('username') || 'Unknown User';
+                const loginTime = localStorage.getItem('loginTime');
+                
+                document.getElementById('current-username').textContent = username;
+                document.getElementById('profile-username').value = username;
+                
+                if (loginTime) {
+                    const loginDate = new Date(loginTime);
+                    document.getElementById('login-time').value = loginDate.toLocaleString();
+                }
+            }
+
+            loadPreferences() {
+                const notifications = localStorage.getItem('notifications') !== 'false';
+                const autoSave = localStorage.getItem('autoSave') !== 'false';
+                const darkMode = localStorage.getItem('darkMode') === 'true';
+
+                document.getElementById('notifications').checked = notifications;
+                document.getElementById('auto-save').checked = autoSave;
+                document.getElementById('dark-mode').checked = darkMode;
+            }
+
+            showNotification(message, type = 'success') {
+                const container = document.getElementById('notification-container');
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+                notification.innerHTML = `
+                    <i class="fas fa-${type === 'success' ? 'check' : 'exclamation-triangle'}"></i>
+                    <span>${message}</span>
+                `;
+                
+                container.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.remove();
+                }, 3000);
+            }
+        }
+
+        // Global functions
+        function logout() {
+            document.getElementById('logout-modal').style.display = 'flex';
+        }
+
+        function closeLogoutModal() {
+            document.getElementById('logout-modal').style.display = 'none';
+        }
+
+        function confirmLogout() {
+            // Clear all stored data
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('username');
+            localStorage.removeItem('loginTime');
+            localStorage.removeItem('rememberMe');
+            
+            // Redirect to login page
+            window.location.href = 'login.html';
+        }
+
+        function changePassword() {
+            alert('Password change functionality would be implemented here.\nContact your administrator for password changes.');
+        }
+
+        function clearCache() {
+            // Clear specific cache items but keep login info
+            const keepItems = ['isLoggedIn', 'username', 'loginTime', 'rememberMe'];
+            const itemsToRemove = [];
+            
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (!keepItems.includes(key)) {
+                    itemsToRemove.push(key);
+                }
+            }
+            
+            itemsToRemove.forEach(key => localStorage.removeItem(key));
+            
+            settingsManager.showNotification('Cache cleared successfully!');
+        }
+
+        function savePreferences() {
+            const notifications = document.getElementById('notifications').checked;
+            const autoSave = document.getElementById('auto-save').checked;
+            const darkMode = document.getElementById('dark-mode').checked;
+
+            localStorage.setItem('notifications', notifications);
+            localStorage.setItem('autoSave', autoSave);
+            localStorage.setItem('darkMode', darkMode);
+
+            if (darkMode) {
+                document.body.classList.add('dark-mode');
+            } else {
+                document.body.classList.remove('dark-mode');
+            }
+
+            settingsManager.showNotification('Preferences saved successfully!');
+        }
+
+        // Initialize settings manager
+        let settingsManager;
+        document.addEventListener('DOMContentLoaded', function() {
+            settingsManager = new SettingsManager();
+            
+            // Initialize navigation
+            if (typeof NavigationManager !== 'undefined') {
+                new NavigationManager();
+            }
+        });
+    </script>
+
+    <style>        
+        /* No navigation styles here; sidebar navigation is styled globally in sidebar.css */
+        
+        .settings-section {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .section-header {
+            background: #f8f9fa;
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .section-header h2 {
+            margin: 0 0 0.5rem 0;
+            color: #2c3e50;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-header p {
+            margin: 0;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        .section-content {
+            padding: 2rem;
+        }
+
+        .profile-info, .security-actions, .preferences, .app-info {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .security-actions {
+            flex-direction: row;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-badge.active {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .preference-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .preference-item:last-child {
+            border-bottom: none;
+        }
+
+        .preference-item label {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #28a745;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            animation: slideIn 0.3s ease;
+        }
+
+        .notification.error {
+            background: #dc3545;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #6c757d;
+            font-weight: 500;
+        }
+
+        #logout-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        }
+    </style>
+</body>
+</html>

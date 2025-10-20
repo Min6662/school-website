@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Management - School Management System</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h3><i class="fas fa-graduation-cap"></i> School Portal</h3>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="dashboard.html" class="nav-item">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="students.html" class="nav-item">
+                <i class="fas fa-user-graduate"></i>
+                <span>Students</span>
+            </a>
+            <a href="teachers.html" class="nav-item active">
+                <i class="fas fa-chalkboard-teacher"></i>
+                <span>Teachers</span>
+            </a>
+            <a href="classes.html" class="nav-item">
+                <i class="fas fa-book-open"></i>
+                <span>Classes</span>
+            </a>
+            <a href="results.html" class="nav-item">
+                <i class="fas fa-chart-bar"></i>
+                <span>Results</span>
+            </a>
+            <a href="settings.html" class="nav-item">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </a>
+        </nav>
+    </div>
+
+    <div class="main-content">
+        <header class="main-header">
+            <h1>Teacher Management</h1>
+            <div class="header-actions">
+                <button class="btn btn-primary" onclick="teacherManager.showAddTeacherModal()">
+                    <i class="fas fa-plus"></i> Add Teacher
+                </button>
+            </div>
+        </header>
+
+        <div class="content-wrapper">
+            <!-- Search and Filters -->
+            <div class="search-bar">
+                <div class="search-input-wrapper">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="teacher-search" placeholder="Search teachers..." class="search-input">
+                </div>
+                <select id="subject-filter" class="filter-select">
+                    <option value="">All Subjects</option>
+                    <option value="mathematics">Mathematics</option>
+                    <option value="english">English</option>
+                    <option value="science">Science</option>
+                    <option value="history">History</option>
+                    <option value="physics">Physics</option>
+                    <option value="chemistry">Chemistry</option>
+                </select>
+            </div>
+
+            <!-- Teachers Table -->
+            <div class="data-table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Subject</th>
+                            <th>Salary</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="teachers-table-body">
+                        <!-- Dynamic content will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Loading indicator -->
+            <div id="loading-indicator" class="loading-indicator" style="display: none;">
+                <div class="spinner"></div>
+                <p>Loading teachers...</p>
+            </div>
+
+            <!-- Empty state -->
+            <div id="empty-state" class="empty-state" style="display: none;">
+                <i class="fas fa-chalkboard-teacher"></i>
+                <h3>No Teachers Found</h3>
+                <p>Start by adding your first teacher to the system.</p>
+                <button class="btn btn-primary" onclick="teacherManager.showAddTeacherModal()">
+                    <i class="fas fa-plus"></i> Add Teacher
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Teacher Modal -->
+    <div id="teacher-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">Add Teacher</h2>
+                <span class="close" onclick="teacherManager.closeModal()">&times;</span>
+            </div>
+            <form id="teacher-form" class="modal-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="teacher-name">Full Name *</label>
+                        <input type="text" id="teacher-name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="teacher-id">Teacher ID *</label>
+                        <input type="text" id="teacher-id" name="teacherId" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="teacher-email">Email *</label>
+                        <input type="email" id="teacher-email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="teacher-phone">Phone Number</label>
+                        <input type="tel" id="teacher-phone" name="phone">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="teacher-subject">Subject *</label>
+                        <select id="teacher-subject" name="subject" required>
+                            <option value="">Select Subject</option>
+                            <option value="mathematics">Mathematics</option>
+                            <option value="english">English</option>
+                            <option value="science">Science</option>
+                            <option value="history">History</option>
+                            <option value="physics">Physics</option>
+                            <option value="chemistry">Chemistry</option>
+                            <option value="biology">Biology</option>
+                            <option value="geography">Geography</option>
+                            <option value="computer-science">Computer Science</option>
+                            <option value="physical-education">Physical Education</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="teacher-qualification">Qualification</label>
+                        <input type="text" id="teacher-qualification" name="qualification" placeholder="e.g., M.Sc, B.Ed">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="teacher-salary">Monthly Salary</label>
+                        <input type="number" id="teacher-salary" name="salary" min="0" step="100">
+                    </div>
+                    <div class="form-group">
+                        <label for="teacher-experience">Experience (Years)</label>
+                        <input type="number" id="teacher-experience" name="experience" min="0" step="1">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="teacher-joining-date">Joining Date</label>
+                        <input type="date" id="teacher-joining-date" name="joiningDate">
+                    </div>
+                    <div class="form-group">
+                        <label for="teacher-status">Status</label>
+                        <select id="teacher-status" name="status">
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                            <option value="on-leave">On Leave</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group full-width">
+                        <label for="teacher-address">Address</label>
+                        <textarea id="teacher-address" name="address" rows="3"></textarea>
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="teacherManager.closeModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">
+                        <span id="submit-text">Add Teacher</span>
+                        <div id="submit-spinner" class="button-spinner" style="display: none;"></div>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Attendance Marking Modal -->
+    <div id="attendance-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Mark Attendance</h2>
+                <span class="close" onclick="teacherManager.closeAttendanceModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="attendance-info">
+                    <h3 id="attendance-teacher-name"></h3>
+                    <p id="attendance-date"></p>
+                </div>
+                <div class="attendance-options">
+                    <button class="btn btn-success" onclick="teacherManager.markAttendance('present')">
+                        <i class="fas fa-check"></i> Present
+                    </button>
+                    <button class="btn btn-warning" onclick="teacherManager.markAttendance('late')">
+                        <i class="fas fa-clock"></i> Late
+                    </button>
+                    <button class="btn btn-danger" onclick="teacherManager.markAttendance('absent')">
+                        <i class="fas fa-times"></i> Absent
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Container -->
+    <div id="notification-container"></div>
+
+    <!-- Scripts -->
+    <script src="js/config.js"></script>
+    <script src="js/api-service.js"></script>
+    <script src="js/navigation.js"></script>
+    <script src="js/teacher-management.js"></script>
+    
+    <script>
+        // Initialize navigation and teacher management
+        document.addEventListener('DOMContentLoaded', function() {
+            const navigation = new NavigationManager();
+            
+            if (typeof apiService !== 'undefined') {
+                window.teacherManager = new TeacherManager(apiService);
+            } else {
+                console.error('API service not available');
+            }
+        });
+    </script>
+</body>
+</html>
