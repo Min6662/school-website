@@ -1,6 +1,13 @@
 // Back4App API Service Layer for School Management System
 
 class Back4AppService {
+    // Fetch enrollments for a given classId (objectId)
+    async getEnrollmentsByClass(classId) {
+        // Use the Enrolment class in Back4App
+        const endpoint = `/classes/Enrolment?where=${encodeURIComponent(JSON.stringify({ class: { __type: 'Pointer', className: 'Class', objectId: classId } }))}&include=student`;
+        const response = await this.request(endpoint, { method: 'GET' });
+        return response.results || [];
+    }
     constructor() {
         // Check if CONFIG is available
         if (typeof CONFIG === 'undefined') {

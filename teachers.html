@@ -241,11 +241,41 @@
     
     <script>
         // Initialize navigation and teacher management
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', async function() {
             const navigation = new NavigationManager();
-            
             if (typeof apiService !== 'undefined') {
                 window.teacherManager = new TeacherManager(apiService);
+                // Fetch and render teachers in the table
+                try {
+                    document.getElementById('loading-indicator').style.display = 'block';
+                    const teachers = await apiService.getTeachers();
+                    const tbody = document.getElementById('teachers-table-body');
+                    if (teachers.length === 0) {
+                        document.getElementById('empty-state').style.display = 'block';
+                        tbody.innerHTML = '';
+                    } else {
+                        document.getElementById('empty-state').style.display = 'none';
+                        tbody.innerHTML = teachers.map(t => `
+                            <tr>
+                                <td>${t.teacherId || t.id || t.objectId || ''}</td>
+                                <td>${t.fullName || ''}</td>
+                                <td>${t.email || ''}</td>
+                                <td>${t.phone || ''}</td>
+                                <td>${t.subject || ''}</td>
+                                <td>${t.salary || ''}</td>
+                                <td>
+                                    <button class="btn-small btn-edit" onclick="teacherManager.editTeacher('${t.id || t.objectId}')"><i class='fas fa-edit'></i> Edit</button>
+                                </td>
+                            </tr>
+                        `).join('');
+                    }
+                } catch (err) {
+                    document.getElementById('empty-state').style.display = 'block';
+                    document.getElementById('teachers-table-body').innerHTML = '';
+                    console.error('Failed to fetch teachers:', err);
+                } finally {
+                    document.getElementById('loading-indicator').style.display = 'none';
+                }
             } else {
                 console.error('API service not available');
             }
